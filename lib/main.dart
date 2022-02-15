@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 
 import './transaction.dart';
@@ -40,7 +42,7 @@ class MyHomePage extends StatelessWidget {
         title: Text('My Wallet'),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
@@ -62,7 +64,7 @@ class MyHomePage extends StatelessWidget {
                         vertical: 10, horizontal: 15),
                     decoration: BoxDecoration(
                         border: Border.all(
-                      color: Colors.black,
+                      color: Colors.purple,
                       width: 2,
                     )),
                     child: Text(
@@ -75,7 +77,24 @@ class MyHomePage extends StatelessWidget {
                     ),
                   ),
                   Column(
-                    children: [Text(tx.title), Text(tx.date.toString())],
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        tx.title,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Text(
+                        tx.date.toString(),
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.grey,
+                        ),
+                      )
+                    ],
                   ),
                 ],
               );
