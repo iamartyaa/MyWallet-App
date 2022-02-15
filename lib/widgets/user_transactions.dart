@@ -7,7 +7,6 @@ import 'package:mywallet/widgets/new_transaction.dart';
 import 'package:mywallet/widgets/transaction_list.dart';
 import '../models/transaction.dart';
 
-
 class UserTransactions extends StatefulWidget {
   const UserTransactions({Key? key}) : super(key: key);
 
@@ -30,13 +29,28 @@ class _UserTransactionsState extends State<UserTransactions> {
       date: DateTime.now(),
     ),
   ];
-  
+
+  void _addNewTransaction(String txtitle, double txamount) {
+    final tx = Transaction(
+      title: txtitle,
+      amount: txamount,
+      date: DateTime.now(),
+      id: DateTime.now().toString(),
+    );
+
+    setState(() {
+      _userTransactions.add(tx);
+    });
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        NewTransaction(),
-        TransactionList(),
+        NewTransaction(_addNewTransaction),
+        TransactionList(_userTransactions),
       ],
     );
   }
