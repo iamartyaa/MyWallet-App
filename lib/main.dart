@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import './transaction.dart';
 
@@ -35,6 +36,12 @@ class MyHomePage extends StatelessWidget {
       date: DateTime.now(),
     ),
   ];
+  //late String titleInput;
+  //late String amountInput;
+  final titleController = TextEditingController();
+  final amountController= TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,11 +54,46 @@ class MyHomePage extends StatelessWidget {
         children: [
           Container(
             width: double.infinity,
-            height: 150,
+            height: 50,
             child: Card(
               child: Text('Chart'),
               elevation: 15,
               color: Colors.blue,
+            ),
+          ),
+          Card(
+            elevation: 5,
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  TextField(
+                    decoration: InputDecoration(labelText: 'Title'),
+                    //onChanged: (val) {
+                    //  titleInput=val;
+                    //},
+                    controller: titleController,
+                  ),
+                  TextField(
+                    decoration: InputDecoration(labelText: 'Amount'),
+                    //onChanged: (val) {
+                    //  amountInput=val;
+                    //},
+                    controller: amountController,
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      'Add Transaction',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    style: TextButton.styleFrom(
+                      primary: Colors.purple,
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
           Column(
@@ -67,8 +109,9 @@ class MyHomePage extends StatelessWidget {
                       color: Colors.purple,
                       width: 2,
                     )),
-                    child: Text(                           //+ tx.amount.toString()
-                      'Rs ${tx.amount}' ,
+                    child: Text(
+                      //+ tx.amount.toString()
+                      'Rs ${tx.amount}',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
@@ -88,7 +131,8 @@ class MyHomePage extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        tx.date.toString(),
+                        // DateFormat('dd-MM-yyyy EEEE').format(tx.date)
+                        DateFormat.yMMMd().add_jm().format(tx.date),
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey,
