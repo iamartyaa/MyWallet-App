@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, use_key_in_widget_constructors
 
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:mywallet/widgets/new_transaction.dart';
 import 'package:mywallet/widgets/transaction_list.dart';
@@ -18,6 +16,26 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'My Wallet',
+      theme: ThemeData(
+        primarySwatch: Colors.deepPurple,
+        accentColor: Colors.amber,
+        fontFamily: 'OpenSans',
+        textTheme: TextTheme(
+          titleMedium: TextStyle(
+            fontFamily: 'OpenSans',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        // appBarTheme: AppBarTheme(
+        //   textTheme: ThemeData.light().textTheme.copyWith(
+        //         headline6: TextStyle(
+        //           fontFamily: 'OpenSans',
+        //           fontSize: 18,
+        //           fontWeight: FontWeight.w700,
+        //         ),
+        //       ),
+        // ),
+      ),
       home: MyHomePage(),
     );
   }
@@ -31,18 +49,18 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   //late String titleInput;
   final List<Transaction> _userTransactions = [
-    Transaction(
-      id: 't1',
-      title: 'New Shoes',
-      amount: 69.99,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Week Shoes',
-      amount: 16.99,
-      date: DateTime.now(),
-    ),
+    // Transaction(
+    //   id: 't1',
+    //   title: 'New Shoes',
+    //   amount: 69.99,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 't2',
+    //   title: 'Week Shoes',
+    //   amount: 16.99,
+    //   date: DateTime.now(),
+    // ),
   ];
 
   void _addNewTransaction(String txtitle, double txamount) {
@@ -75,7 +93,13 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Wallet'),
+        title: Text(
+          'My Wallet',
+          style: TextStyle(
+            fontFamily: 'OpenSans',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: () => _startAddNewTransaction(context),
