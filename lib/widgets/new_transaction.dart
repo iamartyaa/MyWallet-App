@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors
+// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, prefer_const_constructors_in_immutables
 
 import 'package:flutter/material.dart';
 
@@ -26,6 +26,8 @@ class _NewTransactionState extends State<NewTransaction> {
     }
     widget.addNewTransaction(
         enteredTitle, enteredAmount);
+
+    Navigator.of(context).pop();
   }
 
   @override
