@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
+import 'package:mywallet/widgets/chart.dart';
 import 'package:mywallet/widgets/new_transaction.dart';
 import 'package:mywallet/widgets/transaction_list.dart';
 import 'package:mywallet/models/transaction.dart';
@@ -19,11 +20,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
         accentColor: Colors.amber,
+        errorColor: Colors.red,
         fontFamily: 'OpenSans',
         textTheme: TextTheme(
           titleMedium: TextStyle(
             fontFamily: 'OpenSans',
             fontWeight: FontWeight.w700,
+            color: Colors.deepPurple,
           ),
         ),
         // appBarTheme: AppBarTheme(
@@ -49,31 +52,47 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   //late String titleInput;
   final List<Transaction> _userTransactions = [
-    // Transaction(
-    //   id: 't1',
-    //   title: 'New Shoes',
-    //   amount: 69.99,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't2',
-    //   title: 'Week Shoes',
-    //   amount: 16.99,
-    //   date: DateTime.now(),
-    // ),
+    Transaction(
+      id: 't1',
+      title: 'New Shoes',
+      amount: 69.99,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't2',
+      title: 'Bag',
+      amount: 16.99,
+      date: DateTime.now(),
+    ),
   ];
 
-  void _addNewTransaction(String txtitle, double txamount) {
+  List<Transaction> get _recentTransactions {
+    return _userTransactions.where((tx)  {
+      return tx.date.isAfter(DateTime.now().subtract(Duration(days: 7),),);
+    } ).toList();
+  }
+
+
+  void _addNewTransaction(String txtitle, double txamount,DateTime d) {
     final tx = Transaction(
       title: txtitle,
       amount: txamount,
-      date: DateTime.now(),
+      date: d,
       id: DateTime.now().toString(),
     );
 
     setState(() {
       _userTransactions.add(tx);
     });
+  }
+
+  void _deleteTransaction(String id){
+    setState(() {
+      _userTransactions.removeWhere((tx) {
+        return tx.id == id;
+      });
+    });
+
   }
 
   void _startAddNewTransaction(BuildContext ctx) {
@@ -112,16 +131,8 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              width: double.infinity,
-              height: 50,
-              child: Card(
-                child: Text('Chart'),
-                elevation: 15,
-                color: Colors.blue,
-              ),
-            ),
-            TransactionList(_userTransactions),
+            Chart(_recentTransactions),
+            TransactionList(_userTransactions,_deleteTransaction),
           ],
         ),
       ),

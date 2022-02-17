@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, prefer_const_constructors_in_immutables
 
 import 'package:flutter/material.dart';
-
+import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 class NewTransaction extends StatefulWidget {
   final Function addNewTransaction;
 
@@ -13,21 +15,49 @@ class NewTransaction extends StatefulWidget {
 
 class _NewTransactionState extends State<NewTransaction> {
   final titleController = TextEditingController();
-
+  late DateTime pickedDate;
   final amountController = TextEditingController();
 
   void submitData() {
     final enteredTitle = titleController.text;
     final enteredAmount = double.parse(amountController.text);
 
-    if(enteredAmount<=0 || enteredTitle.isEmpty)
-    {
+    if (enteredAmount <= 0 || enteredTitle.isEmpty) {
+      return;
+    }
+    if(pickedDate == null){
       return;
     }
     widget.addNewTransaction(
-        enteredTitle, enteredAmount);
+      enteredTitle,
+      enteredAmount,
+      pickedDate,
+    );
 
     Navigator.of(context).pop();
+  }
+
+  int d = 0;
+  void _presentDatePicker() {
+    
+    showRoundedDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2021),
+      lastDate: DateTime.now(),
+      borderRadius: 16,
+      theme: ThemeData(
+        primarySwatch: Colors.deepPurple,
+      ),
+    ).then((value) {
+      if (value == null) {
+        return;
+      }
+      setState(() {
+        d = 1;
+        pickedDate = value;
+      });
+    });
   }
 
   @override
@@ -56,14 +86,42 @@ class _NewTransactionState extends State<NewTransaction> {
               keyboardType: TextInputType.number,
               onSubmitted: (val) => submitData(),
             ),
-            TextButton(
+            Container(
+              height: 70,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      d == 0
+                          ? 'No Date Chosen'
+                          : 'Picked Date: ${DateFormat.yMMMd().format(pickedDate)}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'OpenSans',
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  OutlineButton(
+                    textColor: Theme.of(context).primaryColor,
+                    onPressed: _presentDatePicker,
+                    child: Text(
+                      'Chose Date',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700, fontFamily: 'OpenSans'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ElevatedButton(
               onPressed: () => submitData(),
               child: Text(
                 'Add Transaction',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              style: TextButton.styleFrom(
-                primary: Colors.purple,
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
               ),
             ),
           ],
