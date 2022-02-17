@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
 class NewTransaction extends StatefulWidget {
   final Function addNewTransaction;
 
