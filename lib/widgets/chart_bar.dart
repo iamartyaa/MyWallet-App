@@ -18,14 +18,14 @@ class ChartBar extends StatelessWidget {
       return Column(
         children: [
           Container(
-              height: constraints.maxHeight*0.15,
+              height: constraints.maxHeight * 0.15,
               child:
                   FittedBox(child: Text('Rs ${sAmount.toStringAsFixed(0)}'))),
           SizedBox(
-            height: constraints.maxHeight*0.05,
+            height: constraints.maxHeight * 0.05,
           ),
           Container(
-            height: constraints.maxHeight*0.6,
+            height: constraints.maxHeight * 0.6,
             width: 10,
             child: Stack(
               children: [
@@ -49,11 +49,11 @@ class ChartBar extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: constraints.maxHeight*0.05,
+            height: constraints.maxHeight * 0.05,
           ),
           Container(
-            height: constraints.maxHeight*0.15,
-            child: FittedBox(child: Text(label))),
+              height: constraints.maxHeight * 0.15,
+              child: FittedBox(child: Text(label))),
         ],
       );
     }));
