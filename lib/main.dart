@@ -1,13 +1,16 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mywallet/widgets/chart.dart';
 import 'package:mywallet/widgets/new_transaction.dart';
 import 'package:mywallet/widgets/transaction_list.dart';
 import 'package:mywallet/models/transaction.dart';
 
 void main() {
-  
+  // To set orientation for our app 
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.portraitDown]);
   runApp(const MyApp());
 
 }
