@@ -7,7 +7,9 @@ import 'package:mywallet/widgets/transaction_list.dart';
 import 'package:mywallet/models/transaction.dart';
 
 void main() {
+  
   runApp(const MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
