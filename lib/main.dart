@@ -8,11 +8,10 @@ import 'package:mywallet/widgets/transaction_list.dart';
 import 'package:mywallet/models/transaction.dart';
 
 void main() {
-  // To set orientation for our app 
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.portraitDown]);
+  // To set orientation for our app
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.portraitDown]);
   runApp(const MyApp());
-
 }
 
 class MyApp extends StatelessWidget {
@@ -57,18 +56,19 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   //late String titleInput;
-  final List<Transaction> _userTransactions = [
-    
-  ];
+  final List<Transaction> _userTransactions = [];
 
   List<Transaction> get _recentTransactions {
-    return _userTransactions.where((tx)  {
-      return tx.date.isAfter(DateTime.now().subtract(Duration(days: 7),),);
-    } ).toList();
+    return _userTransactions.where((tx) {
+      return tx.date.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 7),
+        ),
+      );
+    }).toList();
   }
 
-
-  void _addNewTransaction(String txtitle, double txamount,DateTime d) {
+  void _addNewTransaction(String txtitle, double txamount, DateTime d) {
     final tx = Transaction(
       title: txtitle,
       amount: txamount,
@@ -81,13 +81,12 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _deleteTransaction(String id){
+  void _deleteTransaction(String id) {
     setState(() {
       _userTransactions.removeWhere((tx) {
         return tx.id == id;
       });
     });
-
   }
 
   void _startAddNewTransaction(BuildContext ctx) {
@@ -102,25 +101,44 @@ class _MyHomePageState extends State<MyHomePage> {
       },
     );
   }
-
+  
+    bool _showChart=false;
+    
   @override
   Widget build(BuildContext context) {
-    final appBar=AppBar(
-        title: Text(
-          'My Wallet',
-          style: TextStyle(
-            fontFamily: 'OpenSans',
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => _startAddNewTransaction(context),
-            icon: Icon(Icons.add),
-          ),
-        ],
-      );
+
+    final bool isLandscape = MediaQuery.of(context).orientation==Orientation.landscape;
     
+    final appBar = AppBar(
+      title: Text(
+        'My Wallet',
+        style: TextStyle(
+          fontFamily: 'OpenSans',
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      actions: [
+        IconButton(
+          onPressed: () => _startAddNewTransaction(context),
+          icon: Icon(Icons.add),
+        ),
+      ],
+    );
+
+    final chartContainer=Container(
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.6,
+                child: Chart(_recentTransactions));
+    final listContainer=Container(
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.7,
+                child: TransactionList(_userTransactions, _deleteTransaction));
+
+
     return Scaffold(
       appBar: appBar,
       body: SingleChildScrollView(
@@ -128,12 +146,33 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            if(isLandscape) Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Show Chart',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                Switch(value: _showChart, onChanged: (val) {
+                  setState(() {
+                    _showChart=val;
+                  });
+                }),
+              ],
+            ),
+            if(!isLandscape)
             Container(
-              height: (MediaQuery.of(context).size.height-appBar.preferredSize.height -MediaQuery.of(context).padding.top)*0.3,
-              child: Chart(_recentTransactions)),
-            Container(
-              height: (MediaQuery.of(context).size.height-appBar.preferredSize.height-MediaQuery.of(context).padding.top)*0.7,              
-              child: TransactionList(_userTransactions,_deleteTransaction)),
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.3,
+                child: Chart(_recentTransactions)),
+            if(!isLandscape)
+            listContainer,
+            if(isLandscape)
+            _showChart==true ?
+            chartContainer:
+            listContainer,
           ],
         ),
       ),

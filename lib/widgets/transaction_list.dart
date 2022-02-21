@@ -12,8 +12,8 @@ class TransactionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
+    return LayoutBuilder(builder: ((context, constraints) {
+      return Container(
       child: _userTransactions.isEmpty
           ? Column(
               children: [
@@ -21,7 +21,7 @@ class TransactionList extends StatelessWidget {
                   height: 25,
                 ),
                 Container(
-                  height: 250,
+                  height: constraints.maxHeight*0.5,
                   child: Image.asset(
                     'assets/images/waiting.png',
                     fit: BoxFit.cover,
@@ -70,5 +70,6 @@ class TransactionList extends StatelessWidget {
               itemCount: _userTransactions.length,
             ),
     );
+    })); 
   }
 }
