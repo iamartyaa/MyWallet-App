@@ -1,5 +1,5 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, use_key_in_widget_constructors
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mywallet/widgets/chart.dart';
@@ -153,7 +153,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   'Show Chart',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                Switch(value: _showChart, onChanged: (val) {
+                Switch.adaptive(
+                  activeColor: Theme.of(context).accentColor,
+                  value: _showChart, onChanged: (val) {
                   setState(() {
                     _showChart=val;
                   });
@@ -176,11 +178,13 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+      
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: Platform.isIOS ? Container() : FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _startAddNewTransaction(context),
       ),
+
     );
   }
 }
