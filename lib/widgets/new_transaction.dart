@@ -63,69 +63,76 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            TextField(
-              decoration: InputDecoration(labelText: 'Title'),
-              //onChanged: (val) {
-              //  titleInput=val;
-              //},
-              controller: titleController,
-              onSubmitted: (val) => submitData(),
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Amount'),
-              //onChanged: (val) {
-              //  amountInput=val;
-              //},
-              controller: amountController,
-              keyboardType: TextInputType.number,
-              onSubmitted: (val) => submitData(),
-            ),
-            Container(
-              height: 70,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      d == 0
-                          ? 'No Date Chosen'
-                          : 'Picked Date: ${DateFormat.yMMMd().format(pickedDate)}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'OpenSans',
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Container(
+          padding: EdgeInsets.only(
+            top: 10,
+            left: 10,
+            right: 10,
+            bottom: MediaQuery.of(context).viewInsets.bottom +10,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              TextField(
+                decoration: InputDecoration(labelText: 'Title'),
+                //onChanged: (val) {
+                //  titleInput=val;
+                //},
+                controller: titleController,
+                onSubmitted: (val) => submitData(),
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: 'Amount'),
+                //onChanged: (val) {
+                //  amountInput=val;
+                //},
+                controller: amountController,
+                keyboardType: TextInputType.number,
+                onSubmitted: (val) => submitData(),
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height*0.05,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        d == 0
+                            ? 'No Date Chosen'
+                            : 'Picked Date: ${DateFormat.yMMMd().format(pickedDate)}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'OpenSans',
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  OutlineButton(
-                    textColor: Theme.of(context).primaryColor,
-                    onPressed: _presentDatePicker,
-                    child: Text(
-                      'Chose Date',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w700, fontFamily: 'OpenSans'),
+                    SizedBox(
+                      width: 8,
                     ),
-                  ),
-                ],
+                    OutlineButton(
+                      textColor: Theme.of(context).primaryColor,
+                      onPressed: _presentDatePicker,
+                      child: Text(
+                        'Chose Date',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700, fontFamily: 'OpenSans'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            ElevatedButton(
-              onPressed: () => submitData(),
-              child: Text(
-                'Add Transaction',
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              ElevatedButton(
+                onPressed: () => submitData(),
+                child: Text(
+                  'Add Transaction',
+                  style:
+                      TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
