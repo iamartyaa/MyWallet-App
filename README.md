@@ -1,16 +1,22 @@
-# mywallet
+# MyWallet App
 
-A new Flutter project.
+An app to keep track of all user transactions & display a bar graph showing transactions made on each day over the last week.
 
-## Getting Started
+## Key Points
 
-This project is a starting point for a Flutter application.
+- Built with **Flutter** using the **Dart** & Flutter widgets
+- **Material UI** Frontend for Android & **Cupertino** for iOS devices
+- **Responsive** to all screen sizes,**Adaptive** to platform ( iOS / Android / Web ) & with Layout switching between Portrait / Landscape
 
-A few resources to get you started if this is your first Flutter project:
+## ScreenShots
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+<img src="Screenshot_1646584883.png" height="300em" />  <img src="Screenshot_1646584910.png" height="300em" />  <img src="Screenshot_1646584954.png" height="300em" /> <br>
+---
+<img src="Screenshot_1646584970.png" height="300em" /> <br>
+---
+<img src="Screenshot_1646584975.png" height="300em" />
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Created & Maintained by
+
+### **Amartya Yadav**
+---
