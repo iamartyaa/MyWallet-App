@@ -18,8 +18,14 @@ class _NewTransactionState extends State<NewTransaction> {
   final titleController = TextEditingController();
   late DateTime pickedDate;
   final amountController = TextEditingController();
+  bool isLoading = false;
 
   void submitData() {
+
+    setState(() {
+      isLoading=true;
+    });
+
     final enteredTitle = titleController.text;
     final enteredAmount = double.parse(amountController.text);
 
@@ -37,10 +43,11 @@ class _NewTransactionState extends State<NewTransaction> {
       pickedDate,
     )
         .then((_) {
+          setState(() {
+            isLoading=false;
+          });
       Navigator.of(context).pop();
     });
-
-
 
   }
 
@@ -68,7 +75,7 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return isLoading ? Center(child: CircularProgressIndicator()) : SingleChildScrollView(
       child: Card(
         elevation: 5,
         child: Container(
