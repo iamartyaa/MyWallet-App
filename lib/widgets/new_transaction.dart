@@ -26,21 +26,26 @@ class _NewTransactionState extends State<NewTransaction> {
     if (enteredAmount <= 0 || enteredTitle.isEmpty) {
       return;
     }
-    if(pickedDate == null){
+    if (pickedDate == null) {
       return;
     }
-    widget.addNewTransaction(
+
+    widget
+        .addNewTransaction(
       enteredTitle,
       enteredAmount,
       pickedDate,
-    );
+    )
+        .then((_) {
+      Navigator.of(context).pop();
+    });
 
-    Navigator.of(context).pop();
+
+
   }
 
   int d = 0;
   void _presentDatePicker() {
-    
     showRoundedDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -71,7 +76,7 @@ class _NewTransactionState extends State<NewTransaction> {
             top: 10,
             left: 10,
             right: 10,
-            bottom: MediaQuery.of(context).viewInsets.bottom +10,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -94,7 +99,7 @@ class _NewTransactionState extends State<NewTransaction> {
                 onSubmitted: (val) => submitData(),
               ),
               Container(
-                height: MediaQuery.of(context).size.height*0.05,
+                height: MediaQuery.of(context).size.height * 0.05,
                 child: Row(
                   children: [
                     Expanded(
@@ -117,7 +122,8 @@ class _NewTransactionState extends State<NewTransaction> {
                       child: Text(
                         'Chose Date',
                         style: TextStyle(
-                            fontWeight: FontWeight.w700, fontFamily: 'OpenSans'),
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'OpenSans'),
                       ),
                     ),
                   ],
@@ -127,8 +133,8 @@ class _NewTransactionState extends State<NewTransaction> {
                 onPressed: () => submitData(),
                 child: Text(
                   'Add Transaction',
-                  style:
-                      TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ),
             ],
