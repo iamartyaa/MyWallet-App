@@ -21,9 +21,8 @@ class _NewTransactionState extends State<NewTransaction> {
   bool isLoading = false;
 
   void submitData() {
-
     setState(() {
-      isLoading=true;
+      isLoading = true;
     });
 
     final enteredTitle = titleController.text;
@@ -42,13 +41,33 @@ class _NewTransactionState extends State<NewTransaction> {
       enteredAmount,
       pickedDate,
     )
-        .then((_) {
-          setState(() {
-            isLoading=false;
-          });
-      Navigator.of(context).pop();
-    });
-
+        .catchError((error) {
+      return showDialog(
+          context: context,
+          builder: (ctx) {
+            return AlertDialog(
+              title: Text('An error occured!'),
+              content: Text(error.toString()),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    },
+                    child: Text('Okay'))
+              ],
+            );
+          }).then((_) {
+        setState(() {
+          isLoading = false;
+        });
+        Navigator.of(context).pop();
+      });
+    }).then((_) {
+        setState(() {
+          isLoading = false;
+        });
+        Navigator.of(context).pop();
+      });
   }
 
   int d = 0;
@@ -75,79 +94,81 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading ? Center(child: CircularProgressIndicator()) : SingleChildScrollView(
-      child: Card(
-        elevation: 5,
-        child: Container(
-          padding: EdgeInsets.only(
-            top: 10,
-            left: 10,
-            right: 10,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              TextField(
-                decoration: InputDecoration(labelText: 'Title'),
-                //onChanged: (val) {
-                //  titleInput=val;
-                //},
-                controller: titleController,
-                onSubmitted: (val) => submitData(),
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: 'Amount'),
-                //onChanged: (val) {
-                //  amountInput=val;
-                //},
-                controller: amountController,
-                keyboardType: TextInputType.number,
-                onSubmitted: (val) => submitData(),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.05,
-                child: Row(
+    return isLoading
+        ? Center(child: CircularProgressIndicator())
+        : SingleChildScrollView(
+            child: Card(
+              elevation: 5,
+              child: Container(
+                padding: EdgeInsets.only(
+                  top: 10,
+                  left: 10,
+                  right: 10,
+                  bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Expanded(
-                      child: Text(
-                        d == 0
-                            ? 'No Date Chosen'
-                            : 'Picked Date: ${DateFormat.yMMMd().format(pickedDate)}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'OpenSans',
-                        ),
+                    TextField(
+                      decoration: InputDecoration(labelText: 'Title'),
+                      //onChanged: (val) {
+                      //  titleInput=val;
+                      //},
+                      controller: titleController,
+                      onSubmitted: (val) => submitData(),
+                    ),
+                    TextField(
+                      decoration: InputDecoration(labelText: 'Amount'),
+                      //onChanged: (val) {
+                      //  amountInput=val;
+                      //},
+                      controller: amountController,
+                      keyboardType: TextInputType.number,
+                      onSubmitted: (val) => submitData(),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              d == 0
+                                  ? 'No Date Chosen'
+                                  : 'Picked Date: ${DateFormat.yMMMd().format(pickedDate)}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'OpenSans',
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          OutlineButton(
+                            textColor: Theme.of(context).primaryColor,
+                            onPressed: _presentDatePicker,
+                            child: Text(
+                              'Chose Date',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'OpenSans'),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    OutlineButton(
-                      textColor: Theme.of(context).primaryColor,
-                      onPressed: _presentDatePicker,
+                    ElevatedButton(
+                      onPressed: () => submitData(),
                       child: Text(
-                        'Chose Date',
+                        'Add Transaction',
                         style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontFamily: 'OpenSans'),
+                            fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ),
                   ],
                 ),
               ),
-              ElevatedButton(
-                onPressed: () => submitData(),
-                child: Text(
-                  'Add Transaction',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
   }
 }

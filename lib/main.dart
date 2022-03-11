@@ -72,17 +72,43 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  Future<void> _addNewTransaction(String txtitle, double txamount, DateTime d) {
+  // Future<void> _addNewTransaction(String txtitle, double txamount, DateTime d) {
+  //   var url = Uri.https(
+  //       'mywallet-4401d-default-rtdb.firebaseio.com', '/transactions.json');
+  //   return http
+  //       .post(url,
+  //           body: jsonEncode({
+  //             "title": txtitle,
+  //             "amount": txamount,
+  //             "date": d.toString(),
+  //           }))
+  //       .then((value) {
+  //     final tx = Transaction(
+  //       title: txtitle,
+  //       amount: txamount,
+  //       date: d,
+  //       id: jsonDecode(value.body)['name'],
+  //     );
+
+  //     setState(() {
+  //       _userTransactions.add(tx);
+  //     });
+  //   }).catchError((error) {
+  //     throw error;
+  //   });
+  // }
+
+  Future<void> _addNewTransaction(
+      String txtitle, double txamount, DateTime d) async {
     var url = Uri.https(
         'mywallet-4401d-default-rtdb.firebaseio.com', '/transactions.json');
-    return http
-        .post(url,
-            body: jsonEncode({
-              "title": txtitle,
-              "amount": txamount,
-              "date": d.toString(),
-            }))
-        .then((value) {
+    try {
+      final value = await http.post(url,
+          body: jsonEncode({
+            "title": txtitle,
+            "amount": txamount,
+            "date": d.toString(),
+          }));
       final tx = Transaction(
         title: txtitle,
         amount: txamount,
@@ -93,7 +119,11 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _userTransactions.add(tx);
       });
-    });
+      
+    } catch (error) {
+      print(error);
+      throw error;
+    }
   }
 
   void _deleteTransaction(String id) {
