@@ -60,7 +60,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   //late String titleInput;
-  final List<Transaction> _userTransactions = [];
+  List<Transaction> _userTransactions = [];
 
   List<Transaction> get _recentTransactions {
     return _userTransactions.where((tx) {
@@ -97,6 +97,38 @@ class _MyHomePageState extends State<MyHomePage> {
   //     throw error;
   //   });
   // }
+  Future<void> fetchTransactions() async {
+    setState(() {
+      isLoading = true;
+    });
+    final url = Uri.https(
+        'mywallet-4401d-default-rtdb.firebaseio.com', '/transactions.json');
+    try {
+      final response = await http.get(url);
+      setState(() {
+        isLoading = false;
+      });
+
+      final extractedData = jsonDecode(response.body) as Map<String, dynamic>;
+      final List<Transaction> tempList = [];
+      extractedData.forEach((tId, tData) {
+        print('Doone');
+        tempList.add(
+          Transaction(
+            id: tId,
+            title: tData['title'],
+            amount: tData['amount'],
+            date: DateTime.parse(tData['date']),
+          ),
+        );
+      });
+      setState(() {
+        _userTransactions = tempList;
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
 
   Future<void> _addNewTransaction(
       String txtitle, double txamount, DateTime d) async {
@@ -119,7 +151,6 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _userTransactions.add(tx);
       });
-      
     } catch (error) {
       print(error);
       throw error;
@@ -127,6 +158,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _deleteTransaction(String id) {
+    // var url = Uri.https(
+    //     'mywallet-4401d-default-rtdb.firebaseio.com', '/transactions.json');
+    
+    // http.delete(url,body: {});
+
     setState(() {
       _userTransactions.removeWhere((tx) {
         return tx.id == id;
@@ -147,6 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  bool isLoading = false;
   bool _showChart = false;
 
   @override
@@ -177,8 +214,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             actions: [
               IconButton(
-                onPressed: () => _startAddNewTransaction(context),
-                icon: Icon(Icons.add),
+                onPressed: () => fetchTransactions(),
+                icon: Icon(Icons.refresh),
               ),
             ],
           );
@@ -194,7 +231,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 appBar.preferredSize.height -
                 MediaQuery.of(context).padding.top) *
             0.7,
-        child: TransactionList(_userTransactions, _deleteTransaction));
+        child: TransactionList(_userTransactions, _deleteTransaction, isLoading,
+            fetchTransactions));
     // SafeArea widget for managing space on iOS
     final pageBody = SafeArea(
       child: SingleChildScrollView(
