@@ -112,7 +112,6 @@ class _MyHomePageState extends State<MyHomePage> {
       final extractedData = jsonDecode(response.body) as Map<String, dynamic>;
       final List<Transaction> tempList = [];
       extractedData.forEach((tId, tData) {
-        print('Doone');
         tempList.add(
           Transaction(
             id: tId,
