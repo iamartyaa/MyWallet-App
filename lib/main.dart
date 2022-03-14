@@ -60,7 +60,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   //late String titleInput;
-  final List<Transaction> _userTransactions = [];
+  List<Transaction> _userTransactions = [];
 
   List<Transaction> get _recentTransactions {
     return _userTransactions.where((tx) {
@@ -72,17 +72,74 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  Future<void> _addNewTransaction(String txtitle, double txamount, DateTime d) {
+  // Future<void> _addNewTransaction(String txtitle, double txamount, DateTime d) {
+  //   var url = Uri.https(
+  //       'mywallet-4401d-default-rtdb.firebaseio.com', '/transactions.json');
+  //   return http
+  //       .post(url,
+  //           body: jsonEncode({
+  //             "title": txtitle,
+  //             "amount": txamount,
+  //             "date": d.toString(),
+  //           }))
+  //       .then((value) {
+  //     final tx = Transaction(
+  //       title: txtitle,
+  //       amount: txamount,
+  //       date: d,
+  //       id: jsonDecode(value.body)['name'],
+  //     );
+
+  //     setState(() {
+  //       _userTransactions.add(tx);
+  //     });
+  //   }).catchError((error) {
+  //     throw error;
+  //   });
+  // }
+  Future<void> fetchTransactions() async {
+    setState(() {
+      isLoading = true;
+    });
+    final url = Uri.https(
+        'mywallet-4401d-default-rtdb.firebaseio.com', '/transactions.json');
+    try {
+      final response = await http.get(url);
+      setState(() {
+        isLoading = false;
+      });
+
+      final extractedData = jsonDecode(response.body) as Map<String, dynamic>;
+      final List<Transaction> tempList = [];
+      extractedData.forEach((tId, tData) {
+        tempList.add(
+          Transaction(
+            id: tId,
+            title: tData['title'],
+            amount: tData['amount'],
+            date: DateTime.parse(tData['date']),
+          ),
+        );
+      });
+      setState(() {
+        _userTransactions = tempList;
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> _addNewTransaction(
+      String txtitle, double txamount, DateTime d) async {
     var url = Uri.https(
         'mywallet-4401d-default-rtdb.firebaseio.com', '/transactions.json');
-    return http
-        .post(url,
-            body: jsonEncode({
-              "title": txtitle,
-              "amount": txamount,
-              "date": d.toString(),
-            }))
-        .then((value) {
+    try {
+      final value = await http.post(url,
+          body: jsonEncode({
+            "title": txtitle,
+            "amount": txamount,
+            "date": d.toString(),
+          }));
       final tx = Transaction(
         title: txtitle,
         amount: txamount,
@@ -93,10 +150,25 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _userTransactions.add(tx);
       });
-    });
+    } catch (error) {
+      print(error);
+      throw error;
+    }
   }
 
   void _deleteTransaction(String id) {
+    var url = Uri.https(
+        'mywallet-4401d-default-rtdb.firebaseio.com', '/transactions/$id.json');
+
+    final txIndex= _userTransactions.indexWhere((tx) => tx.id==id );
+    final Transaction txProd= _userTransactions[txIndex];  
+
+    _userTransactions.removeAt(txIndex);
+
+    http.delete(url).catchError((error){
+      _userTransactions.insert(txIndex, txProd);
+    });
+
     setState(() {
       _userTransactions.removeWhere((tx) {
         return tx.id == id;
@@ -117,6 +189,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  bool isLoading = false;
   bool _showChart = false;
 
   @override
@@ -147,8 +220,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             actions: [
               IconButton(
-                onPressed: () => _startAddNewTransaction(context),
-                icon: Icon(Icons.add),
+                onPressed: () => fetchTransactions(),
+                icon: Icon(Icons.refresh),
               ),
             ],
           );
@@ -164,7 +237,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 appBar.preferredSize.height -
                 MediaQuery.of(context).padding.top) *
             0.7,
-        child: TransactionList(_userTransactions, _deleteTransaction));
+        child: TransactionList(_userTransactions, _deleteTransaction, isLoading,
+            fetchTransactions));
     // SafeArea widget for managing space on iOS
     final pageBody = SafeArea(
       child: SingleChildScrollView(
