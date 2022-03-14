@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
       isLoading = true;
     });
     final url = Uri.https(
-        'mywallet-4401d-default-rtdb.firebaseio.com', '/transactions.json');
+        'wallet-e5e68-default-rtdb.firebaseio.com', '/transactions.json');
     try {
       final response = await http.get(url);
       setState(() {
@@ -112,6 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
       final extractedData = jsonDecode(response.body) as Map<String, dynamic>;
       final List<Transaction> tempList = [];
       extractedData.forEach((tId, tData) {
+        print('Doone');
         tempList.add(
           Transaction(
             id: tId,
@@ -132,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _addNewTransaction(
       String txtitle, double txamount, DateTime d) async {
     var url = Uri.https(
-        'mywallet-4401d-default-rtdb.firebaseio.com', '/transactions.json');
+        'wallet-e5e68-default-rtdb.firebaseio.com', '/transactions.json');
     try {
       final value = await http.post(url,
           body: jsonEncode({
@@ -158,14 +159,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _deleteTransaction(String id) {
     var url = Uri.https(
-        'mywallet-4401d-default-rtdb.firebaseio.com', '/transactions/$id.json');
+        'wallet-e5e68-default-rtdb.firebaseio.com', '/transactions/$id.json');
 
-    final txIndex= _userTransactions.indexWhere((tx) => tx.id==id );
-    final Transaction txProd= _userTransactions[txIndex];  
+    final txIndex = _userTransactions.indexWhere((tx) => tx.id == id);
+    final Transaction txProd = _userTransactions[txIndex];
 
     _userTransactions.removeAt(txIndex);
 
-    http.delete(url).catchError((error){
+    http.delete(url).catchError((error) {
       _userTransactions.insert(txIndex, txProd);
     });
 
