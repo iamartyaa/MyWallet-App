@@ -157,10 +157,17 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _deleteTransaction(String id) {
-    // var url = Uri.https(
-    //     'mywallet-4401d-default-rtdb.firebaseio.com', '/transactions.json');
-    
-    // http.delete(url,body: {});
+    var url = Uri.https(
+        'mywallet-4401d-default-rtdb.firebaseio.com', '/transactions/$id.json');
+
+    final txIndex= _userTransactions.indexWhere((tx) => tx.id==id );
+    final Transaction txProd= _userTransactions[txIndex];  
+
+    _userTransactions.removeAt(txIndex);
+
+    http.delete(url).catchError((error){
+      _userTransactions.insert(txIndex, txProd);
+    });
 
     setState(() {
       _userTransactions.removeWhere((tx) {
